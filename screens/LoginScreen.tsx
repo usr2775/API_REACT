@@ -5,16 +5,18 @@ import image1 from '../assets/imajeFotbool.jpeg';
 
 const LoginScreen = ({ navigation }) => {
   const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   const handleLogin = async () => {
-    if (!name || !password) {
+    if (!(name || email) || !password) {
       Alert.alert('Error', 'Por favor, complete todos los campos.');
       return;
     }
+    
 
     try {
-      const response = await loginUser(name, password);
+      const response = await loginUser(email || name, password);
       console.log(response.data);
       navigation.navigate('Welcome', { username: name });
 
@@ -30,16 +32,25 @@ const LoginScreen = ({ navigation }) => {
       <Text style={styles.title}>Login Screen</Text>
       <TouchableOpacity
         style={styles.registerButton}
-        onPress={() => navigation.navigate('Register')}
+        onPress={() => navigation.navigate("Register")}
       >
-        <Text style={{ color: '#FFFFFF', fontSize: 18 }}>No tienes una cuenta? Regístrate</Text>
+        <Text style={{ color: "#FFFFFF", fontSize: 18 }}>
+          No tienes una cuenta? Regístrate
+        </Text>
       </TouchableOpacity>
       <TextInput
         style={styles.input}
-        placeholder="Name"
+        placeholder="Nombre o Correo Electrónico"
         value={name}
-        onChangeText={setName}
+        onChangeText={(text) => {
+          if (text.includes("@")) {
+            setEmail(text);
+          } else {
+            setName(text);
+          }
+        }}
       />
+
       <TextInput
         style={styles.input}
         placeholder="Password"
@@ -47,11 +58,8 @@ const LoginScreen = ({ navigation }) => {
         onChangeText={setPassword}
         secureTextEntry
       />
-      <TouchableOpacity
-        style={styles.loginButton}
-        onPress={handleLogin}
-      >
-        <Text style={{ color: '#FFFFFF', fontSize: 18 }}>Login</Text>
+      <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
+        <Text style={{ color: "#FFFFFF", fontSize: 18 }}>Login</Text>
       </TouchableOpacity>
     </View>
   );

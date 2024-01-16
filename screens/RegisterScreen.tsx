@@ -15,6 +15,7 @@ const RegisterScreen = ({ navigation }) => {
 
     try {
       const { userData, setCookieHeader } = await registerUser(name, email, password);
+
       console.log(userData);
       console.log(setCookieHeader);
 
